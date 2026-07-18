@@ -1,12 +1,15 @@
-﻿<Window x:Class="TushanHonghong.DesktopPet.MainWindow"
+<Window x:Class="TushanHonghong.DesktopPet.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TushanHonghong.DesktopPet"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+        Width="192"
+        Height="208"
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True">
+    <Grid Background="Transparent">
+        <Image x:Name="PetImage" Stretch="None" SnapsToDevicePixels="True" />
     </Grid>
 </Window>
