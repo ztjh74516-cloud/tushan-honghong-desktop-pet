@@ -13,6 +13,8 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(100) };
     private readonly BitmapImage _atlas;
 
+    public bool IsPositionLocked { get; private set; }
+
     public MainWindow()
     {
         InitializeComponent();
@@ -31,10 +33,40 @@ public partial class MainWindow : Window
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs eventArgs)
     {
-        if (eventArgs.ButtonState == MouseButtonState.Pressed)
+        if (!IsPositionLocked && eventArgs.ButtonState == MouseButtonState.Pressed)
         {
             DragMove();
         }
+    }
+
+    public void SetPositionLocked(bool isLocked) => IsPositionLocked = isLocked;
+
+    public void HidePet() => Hide();
+
+    public void RestorePet()
+    {
+        Show();
+        Activate();
+    }
+
+    public void SummonToCenter()
+    {
+        var workArea = SystemParameters.WorkArea;
+        SetPosition(workArea.Left + (workArea.Width - Width) / 2, workArea.Top + (workArea.Height - Height) / 2);
+    }
+
+    public void SetPosition(double left, double top)
+    {
+        var workArea = SystemParameters.WorkArea;
+        var position = PetWindowService.ClampPosition(left, top, Width, Height, workArea.Left, workArea.Top, workArea.Width, workArea.Height);
+        Left = position.Left;
+        Top = position.Top;
+    }
+
+    public void ReloadPet()
+    {
+        _player.Reset();
+        ShowCurrentFrame();
     }
 
     private void ShowCurrentFrame() => PetImage.Source = FrameCropper.Crop(_atlas, 0, _player.CurrentFrame);

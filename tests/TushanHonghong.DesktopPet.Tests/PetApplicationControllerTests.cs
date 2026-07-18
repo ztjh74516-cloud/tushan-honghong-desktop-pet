@@ -24,4 +24,14 @@ public sealed class PetApplicationControllerTests
 
         Assert.Equal(PetMainState.Idle, controller.State);
     }
+
+    [Fact]
+    public void TogglePositionLock_FlipsLockState()
+    {
+        var controller = new PetApplicationController();
+
+        controller.TogglePositionLock();
+
+        Assert.True(controller.IsPositionLocked);
+    }
 }
