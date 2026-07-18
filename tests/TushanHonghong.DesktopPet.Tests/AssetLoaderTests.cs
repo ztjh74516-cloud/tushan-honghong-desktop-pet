@@ -33,9 +33,9 @@ public sealed class AssetLoaderTests
     }
 
     [Fact]
-    public void Validate_RejectsFrameOutsideEightColumns()
+    public void Validate_RejectsFrameOutsideSixteenColumns()
     {
-        var definition = new AnimationDefinition("idle", 0, [0, 8], 100, true);
+        var definition = new AnimationDefinition("idle", 0, [0, 16], 100, true);
 
         Assert.Throws<InvalidDataException>(() => AssetLoader.Validate(definition));
     }
@@ -60,8 +60,8 @@ public sealed class AssetLoaderTests
     public void WpfDecoder_PreservesTransparencyForAtlasCorner()
     {
         var assetPath = Path.Combine(
-            Directory.GetCurrentDirectory(),
-            "src", "TushanHonghong.DesktopPet", "Assets", "base", "spritesheet.png");
+            AppContext.BaseDirectory,
+            "Assets", "base", "spritesheet.png");
         var atlas = new BitmapImage(new Uri(assetPath, UriKind.Absolute));
         var pixels = new byte[4];
 
@@ -74,11 +74,12 @@ public sealed class AssetLoaderTests
     public void IdleManifest_UsesOnlyContinuousIdleFrames()
     {
         var manifestPath = Path.Combine(
-            Directory.GetCurrentDirectory(),
-            "src", "TushanHonghong.DesktopPet", "Assets", "base", "animations.json");
+            AppContext.BaseDirectory,
+            "Assets", "base", "animations.json");
 
         var idle = Assert.Single(AssetLoader.LoadDefinitions(manifestPath));
 
-        Assert.Equal([0, 1, 2, 3, 4, 5], idle.Frames);
+        Assert.Equal(Enumerable.Range(0, 16), idle.Frames);
+        Assert.Equal(66, idle.FrameDurationMilliseconds);
     }
 }

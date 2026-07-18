@@ -5,4 +5,5 @@ TestResults/
 *.user
 *.suo
 .tooling/
+artwork/
 settings.json

@@ -47,9 +47,9 @@ public static class AssetLoader
             throw new InvalidDataException("Animation must contain at least one frame.");
         }
 
-        if (definition.Frames.Any(frame => frame is < 0 or > 7))
+        if (definition.Frames.Any(frame => frame is < 0 or > 15))
         {
-            throw new InvalidDataException("Animation frames must be between 0 and 7.");
+            throw new InvalidDataException("Animation frames must be between 0 and 15.");
         }
 
         if (definition.FrameDurationMilliseconds <= 0)

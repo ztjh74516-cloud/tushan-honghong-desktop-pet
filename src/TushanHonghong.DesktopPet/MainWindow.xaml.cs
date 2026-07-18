@@ -11,6 +11,8 @@ public partial class MainWindow : Window
 {
     private readonly AnimationPlayer _player;
     private readonly DispatcherTimer _timer;
+    private readonly TimeSpan _frameDuration;
+    private TimeSpan _elapsedSinceFrameAdvance;
     private readonly BitmapImage _atlas;
 
     public bool IsPositionLocked { get; private set; }
@@ -21,7 +23,8 @@ public partial class MainWindow : Window
         var manifestPath = Path.Combine(AppContext.BaseDirectory, "Assets", "base", "animations.json");
         var idleAnimation = AssetLoader.LoadDefinitions(manifestPath).Single(definition => definition.Name == "idle");
         _player = new AnimationPlayer(idleAnimation.Frames, idleAnimation.Loops);
-        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(idleAnimation.FrameDurationMilliseconds) };
+        _frameDuration = TimeSpan.FromMilliseconds(idleAnimation.FrameDurationMilliseconds);
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1d / 30d) };
         var assetPath = Path.Combine(AppContext.BaseDirectory, "Assets", "base", "spritesheet.png");
         _atlas = new BitmapImage();
         _atlas.BeginInit();
@@ -29,7 +32,18 @@ public partial class MainWindow : Window
         _atlas.CacheOption = BitmapCacheOption.OnLoad;
         _atlas.EndInit();
         _atlas.Freeze();
-        _timer.Tick += (_, _) => { _player.Advance(); ShowCurrentFrame(); };
+        _timer.Tick += (_, _) =>
+        {
+            _elapsedSinceFrameAdvance += _timer.Interval;
+            if (_elapsedSinceFrameAdvance < _frameDuration)
+            {
+                return;
+            }
+
+            _elapsedSinceFrameAdvance -= _frameDuration;
+            _player.Advance();
+            ShowCurrentFrame();
+        };
         Loaded += (_, _) =>
         {
             ShowCurrentFrame();
