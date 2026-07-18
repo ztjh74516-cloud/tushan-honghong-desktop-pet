@@ -9,8 +9,8 @@ namespace TushanHonghong.DesktopPet;
 
 public partial class MainWindow : Window
 {
-    private readonly AnimationPlayer _player = new([0, 1, 2, 3, 4, 5, 6, 7], true);
-    private readonly DispatcherTimer _timer = new() { Interval = TimeSpan.FromMilliseconds(100) };
+    private readonly AnimationPlayer _player;
+    private readonly DispatcherTimer _timer;
     private readonly BitmapImage _atlas;
 
     public bool IsPositionLocked { get; private set; }
@@ -18,6 +18,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        var manifestPath = Path.Combine(AppContext.BaseDirectory, "Assets", "base", "animations.json");
+        var idleAnimation = AssetLoader.LoadDefinitions(manifestPath).Single(definition => definition.Name == "idle");
+        _player = new AnimationPlayer(idleAnimation.Frames, idleAnimation.Loops);
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(idleAnimation.FrameDurationMilliseconds) };
         var assetPath = Path.Combine(AppContext.BaseDirectory, "Assets", "base", "spritesheet.webp");
         _atlas = new BitmapImage();
         _atlas.BeginInit();

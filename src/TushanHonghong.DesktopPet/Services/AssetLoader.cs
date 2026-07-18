@@ -1,10 +1,33 @@
 using System.IO;
+using System.Text.Json;
 using TushanHonghong.DesktopPet.Domain;
 
 namespace TushanHonghong.DesktopPet.Services;
 
 public static class AssetLoader
 {
+    public static IReadOnlyList<AnimationDefinition> LoadDefinitions(string manifestPath)
+    {
+        if (string.IsNullOrWhiteSpace(manifestPath))
+        {
+            throw new ArgumentException("A manifest path is required.", nameof(manifestPath));
+        }
+
+        using var stream = File.OpenRead(manifestPath);
+        var manifest = JsonSerializer.Deserialize<AnimationManifest>(stream, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        }) ?? throw new InvalidDataException("Animation manifest is empty.");
+
+        var definitions = manifest.Animations ?? [];
+        foreach (var definition in definitions)
+        {
+            Validate(definition);
+        }
+
+        return definitions;
+    }
+
     public static void Validate(AnimationDefinition definition)
     {
         ArgumentNullException.ThrowIfNull(definition);
@@ -34,4 +57,6 @@ public static class AssetLoader
             throw new InvalidDataException("Animation frame duration must be positive.");
         }
     }
+
+    private sealed record AnimationManifest(IReadOnlyList<AnimationDefinition>? Animations);
 }
