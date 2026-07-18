@@ -1,0 +1,14 @@
+{
+  "spritesheetPath": "Assets/base/spritesheet.webp",
+  "cellWidth": 192,
+  "cellHeight": 208,
+  "animations": [
+    {
+      "name": "idle",
+      "row": 0,
+      "frames": [0, 1, 2, 3, 4, 5, 6, 7],
+      "frameDurationMilliseconds": 100,
+      "loops": true
+    }
+  ]
+}
