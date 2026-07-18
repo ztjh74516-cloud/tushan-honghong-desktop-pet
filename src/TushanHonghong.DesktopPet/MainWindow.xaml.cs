@@ -22,7 +22,7 @@ public partial class MainWindow : Window
         var idleAnimation = AssetLoader.LoadDefinitions(manifestPath).Single(definition => definition.Name == "idle");
         _player = new AnimationPlayer(idleAnimation.Frames, idleAnimation.Loops);
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(idleAnimation.FrameDurationMilliseconds) };
-        var assetPath = Path.Combine(AppContext.BaseDirectory, "Assets", "base", "spritesheet.webp");
+        var assetPath = Path.Combine(AppContext.BaseDirectory, "Assets", "base", "spritesheet.png");
         _atlas = new BitmapImage();
         _atlas.BeginInit();
         _atlas.UriSource = new Uri(assetPath, UriKind.Absolute);
@@ -30,7 +30,14 @@ public partial class MainWindow : Window
         _atlas.EndInit();
         _atlas.Freeze();
         _timer.Tick += (_, _) => { _player.Advance(); ShowCurrentFrame(); };
-        Loaded += (_, _) => { ShowCurrentFrame(); _timer.Start(); };
+        Loaded += (_, _) =>
+        {
+            ShowCurrentFrame();
+            if (idleAnimation.Frames.Count > 1)
+            {
+                _timer.Start();
+            }
+        };
         Closed += (_, _) => _timer.Stop();
         MouseLeftButtonDown += OnMouseLeftButtonDown;
     }

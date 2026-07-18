@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Windows.Media.Imaging;
 using TushanHonghong.DesktopPet.Domain;
 using TushanHonghong.DesktopPet.Services;
 
@@ -53,5 +54,19 @@ public sealed class AssetLoaderTests
 
         Assert.Equal("idle", definition.Name);
         Assert.Equal([0, 1], definition.Frames);
+    }
+
+    [Fact]
+    public void WpfDecoder_PreservesTransparencyForAtlasCorner()
+    {
+        var assetPath = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "src", "TushanHonghong.DesktopPet", "Assets", "base", "spritesheet.png");
+        var atlas = new BitmapImage(new Uri(assetPath, UriKind.Absolute));
+        var pixels = new byte[4];
+
+        atlas.CopyPixels(new System.Windows.Int32Rect(0, 0, 1, 1), pixels, 4, 0);
+
+        Assert.Equal(0, pixels[3]);
     }
 }
