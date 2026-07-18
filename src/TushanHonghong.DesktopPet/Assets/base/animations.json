@@ -6,7 +6,7 @@
     {
       "name": "idle",
       "row": 0,
-      "frames": [0],
+      "frames": [0, 1, 2, 3, 4, 5],
       "frameDurationMilliseconds": 100,
       "loops": true
     }

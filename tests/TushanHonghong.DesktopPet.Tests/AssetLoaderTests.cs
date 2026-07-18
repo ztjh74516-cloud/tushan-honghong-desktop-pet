@@ -69,4 +69,16 @@ public sealed class AssetLoaderTests
 
         Assert.Equal(0, pixels[3]);
     }
+
+    [Fact]
+    public void IdleManifest_UsesOnlyContinuousIdleFrames()
+    {
+        var manifestPath = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "src", "TushanHonghong.DesktopPet", "Assets", "base", "animations.json");
+
+        var idle = Assert.Single(AssetLoader.LoadDefinitions(manifestPath));
+
+        Assert.Equal([0, 1, 2, 3, 4, 5], idle.Frames);
+    }
 }
